@@ -139,6 +139,8 @@ RUN wget https://github.com/io12/pwninit/releases/latest/download/pwninit && \
 
 RUN mkdir -p /pwn/binaries
 
+RUN chsh -s $(which zsh)
+
 ENV LC_ALL=C.UTF-8
 
 CMD ["/sbin/my_init"]
