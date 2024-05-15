@@ -70,8 +70,13 @@ RUN python3 -m pip install -U pip && \
 
 RUN gem install one_gadget seccomp-tools && rm -rf /var/lib/gems/2.*/cache/*
 
-RUN git clone https://github.com/apogiatzis/gdb-peda-pwndbg-gef ~/gdb-peda-pwndbg-gef && \
-    cd ~/gdb-peda-pwndbg-gef && sed -i 's/sudo//g' ./install.sh  && ./install.sh
+RUN git clone --depth 1 https://github.com/pwndbg/pwndbg && \
+    cd pwndbg && chmod +x setup.sh && ./setup.sh
+
+RUN git clone --depth 1 https://github.com/scwuaptx/Pwngdb.git ~/Pwngdb && \
+    cd ~/Pwngdb && mv .gdbinit .gdbinit-pwngdb && \
+    sed -i "s?source ~/peda/peda.py?# source ~/peda/peda.py?g" .gdbinit-pwngdb && \
+    echo "source ~/Pwngdb/.gdbinit-pwngdb" >> ~/.gdbinit
 
 RUN wget -O ~/.gdbinit-gef.py -q http://gef.blah.cat/py
 
