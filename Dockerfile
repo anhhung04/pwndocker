@@ -70,8 +70,8 @@ RUN python3 -m pip install -U pip && \
 
 RUN gem install one_gadget seccomp-tools && rm -rf /var/lib/gems/2.*/cache/*
 
-RUN git clone https://github.com/apogiatzis/gdb-peda-pwndbg-gef && \
-    cd gdb-peda-pwndbg-gef && ./install.sh
+RUN git clone https://github.com/apogiatzis/gdb-peda-pwndbg-gef ~/gdb-peda-pwndbg-gef && \
+    cd ~/gdb-peda-pwndbg-gef && ./install.sh
 
 RUN wget -O ~/.gdbinit-gef.py -q http://gef.blah.cat/py
 
@@ -125,8 +125,8 @@ RUN mkdir -p "$HOME/.zsh"
 RUN git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 RUN echo "fpath+=("$HOME/.zsh/pure")\nautoload -U promptinit; promptinit\nprompt pure" >> ~/.zshrc
 
-RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
-RUN echo "source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
+RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
+RUN echo "source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
 
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 RUN echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
@@ -134,7 +134,8 @@ RUN echo "ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=111'" >> ~/.zshrc
 
 RUN wget https://github.com/io12/pwninit/releases/latest/download/pwninit && \
     cp pwninit /usr/local/bin && \
-    chmod +x /usr/local/bin/pwninit
+    chmod +x /usr/local/bin/pwninit && \
+    rm pwninit
 
 RUN mkdir -p /pwn/binaries
 
