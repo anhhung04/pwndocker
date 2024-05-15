@@ -1,0 +1,59 @@
+FROM ubuntu:latest
+
+RUN dpkg --add-architecture i386 && \
+    apt-get -y update && \
+    apt-get -y upgrade && \
+    apt install -y \
+    build-essential \
+    libc6-dbg \
+    lib32stdc++6 \
+    g++-multilib \
+    cmake \
+    gcc \
+    python3 \
+    python3-pip \
+    wget \
+    gdb \
+    gdb-multiarch \
+    git \
+    netcat \
+    vim \
+    file \
+    tmux \
+    netcat \
+    zsh \ 
+    gcc-multilib \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    make
+
+RUN pip install ropgadget pwntools z3-solver patchelf unicorn keystone-engine
+
+RUN apt install libcapstone-dev -y
+
+RUN git clone https://github.com/apogiatzis/gdb-peda-pwndbg-gef && \
+    cd gdb-peda-pwndbg-gef && ./instal.sh
+
+RUN apt install ruby-full -y
+RUN gem install one_gadget seccomp-tools
+
+RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+RUN mkdir -p "$HOME/.zsh"
+RUN git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+RUN echo "fpath+=("$HOME/.zsh/pure")\nautoload -U promptinit; promptinit\nprompt pure" >> ~/.zshrc
+
+RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+RUN echo "source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
+
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+RUN echo "source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+RUN echo "ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=111'" >> ~/.zshrc
+
+RUN wget https://github.com/io12/pwninit/releases/latest/download/pwninit && \
+    cp pwninit /usr/local/bin && \
+    chmod +x /usr/local/bin/pwninit
+
+WORKDIR /home
+
+ENV LC_ALL=C.UTF-8
