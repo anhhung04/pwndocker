@@ -144,6 +144,10 @@ RUN wget https://github.com/io12/pwninit/releases/latest/download/pwninit && \
     chmod +x /usr/local/bin/pwninit && \
     rm pwninit
 
+COPY ./template.py /root/.config/template.py
+
+RUN echo "alias pwninit='pwninit --template-path /root/.config/template.py'" >> ~/.zshrc
+
 RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz && \
     rm -rf /opt/nvim && \
     tar -C /opt -xzf nvim-linux64.tar.gz
