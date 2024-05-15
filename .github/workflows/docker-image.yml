@@ -14,12 +14,11 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       env:
         image_name: hah4/pwndocker
         tag: latest
-        pwntools_version: 4.11.0
       run: |
         docker build . --file Dockerfile --tag $image_name:$tag
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWD }}
