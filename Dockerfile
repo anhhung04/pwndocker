@@ -84,6 +84,8 @@ RUN git clone --depth 1 https://github.com/niklasb/libc-database.git libc-databa
     echo "/libc-database/" > ~/.libcdb_path && \
     rm -rf /tmp/*
 
+COPY ./tmux.conf /root/.tmux.conf
+
 WORKDIR /pwn/work/
 
 # COPY --from=skysider/glibc_builder64:2.19 /glibc/2.19/64 /glibc/2.19/64
@@ -142,9 +144,18 @@ RUN wget https://github.com/io12/pwninit/releases/latest/download/pwninit && \
     chmod +x /usr/local/bin/pwninit && \
     rm pwninit
 
+RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz && \
+    rm -rf /opt/nvim && \
+    tar -C /opt -xzf nvim-linux64.tar.gz
+
+
 RUN mkdir -p /pwn/binaries
 
 RUN chsh -s $(which zsh)
+RUN echo "export PATH=$PATH:/opt/nvim-linux64/bin" >> ~/.zshrc
+
+RUN git clone https://github.com/LazyVim/starter /root/.config/nvim && \
+    rm -rf /root/.config/nvim/.git
 
 ENV LC_ALL=C.UTF-8
 
