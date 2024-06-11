@@ -5,26 +5,26 @@ context.arch = {bin_name}.arch
 context.binary = {bin_name}
 context.log_level = 'debug' if (args.DEBUG or args.GDB) else 'info'
 def slog(n, m): return success(': '.join([n, hex(m)]))
-s = lambda x: r.send(x) if isinstance(x, bytes) else r.send(str(x).encode())
-sl = lambda x: r.sendline(x) if isinstance(x, bytes) else r.sendline(str(x).encode())
-sa = lambda a, x: r.sendafter(str(a), x) if isinstance(x, bytes) else r.sendafter(str(a), x)
-sla = lambda a, x: r.sendlineafter(str(a), x) if isinstance(x, bytes) else r.sendlineafter(str(a), x)
-def conn():
-    if args.LOCAL or args.GDB:
-        r = process({proc_args})
-        if args.GDB:
-            gdb.attach(target=r, gdbscript=GDB_SCRIPT)
+def plog(*a): return log.info("\n=> ".join(map(str, a)))
+s = lambda x: io.send(x) if isinstance(x, bytes) else io.send(str(x).encode())
+sl = lambda x: io.sendline(x) if isinstance(x, bytes) else io.sendline(str(x).encode())
+sa = lambda a, x: io.sendafter(str(a), x) if isinstance(x, bytes) else io.sendafter(str(a), x)
+sla = lambda a, x: io.sendlineafter(str(a), x) if isinstance(x, bytes) else io.sendlineafter(str(a), x)
+def conn(argv=[], *a, **kw):
+    if args.LOCAL:
+        io = process({proc_args} + argv, *a, **kw)
+    elif args.GDB:
+        io = gdb.debug({proc_args} + argv, gdbscript=GDB_SCRIPT, *a, **kw)
     else:
-        r = remote(*REMOTE)
-    return r
+        io = remote(*REMOTE)
+    return io
 
 REMOTE = ("localhost", 1337)
 GDB_SCRIPT = """
+continue
+""".strip().format(**locals())
 
-""".strip()
-
-r = conn()
+io = conn()
 
 
-
-r.interactive()
+io.interactive()
