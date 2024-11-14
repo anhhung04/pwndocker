@@ -3,7 +3,8 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Ho_Chi_Minh
 ENV LC_ALL=C.UTF-8
-
+RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 RUN dpkg --add-architecture i386 && \
     apt-get -y update && \
     apt install -y \
@@ -44,13 +45,6 @@ RUN dpkg --add-architecture i386 && \
     zsh \
     tzdata --fix-missing && \
     rm -rf /var/lib/apt/list/*
-
-RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata
-
-RUN version=$(curl -s https://api.github.com/repos/radareorg/radare2/releases/latest | grep -P '"tag_name": "(.*)"' -o| awk '{print $2}' | awk -F"\"" '{print $2}') && \
-    wget https://github.com/radareorg/radare2/releases/download/${version}/radare2_${version}_amd64.deb && \
-    dpkg -i radare2_${version}_amd64.deb && rm radare2_${version}_amd64.deb
 
 RUN python3 -m pip install -U pip && \
     python3 -m pip install --no-cache-dir \
