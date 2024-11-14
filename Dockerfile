@@ -136,4 +136,4 @@ RUN git clone https://github.com/LazyVim/starter /root/.config/nvim && \
 
 WORKDIR /pwn/binaries
 
-CMD ["/sbin/my_init"]
+CMD ["tail","-f","/dev/null"]
