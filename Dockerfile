@@ -3,8 +3,7 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Ho_Chi_Minh
 ENV LC_ALL=C.UTF-8
-RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata
+
 RUN dpkg --add-architecture i386 && \
     apt-get -y update && \
     apt install -y \
@@ -45,6 +44,9 @@ RUN dpkg --add-architecture i386 && \
     zsh \
     tzdata --fix-missing && \
     rm -rf /var/lib/apt/list/*
+
+RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 RUN python3 -m pip install -U pip && \
     python3 -m pip install --no-cache-dir \
