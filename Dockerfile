@@ -117,6 +117,7 @@ RUN wget https://github.com/io12/pwninit/releases/latest/download/pwninit && \
     chmod +x /usr/local/bin/pwninit
 
 COPY ./template.py $HOME/.config/pwninit/template.py
+COPY tmux.conf /root/.tmux.conf
 
 RUN echo "alias pwninit='pwninit --template-path $HOME/.config/template.py'" >> ~/.zshrc
 
